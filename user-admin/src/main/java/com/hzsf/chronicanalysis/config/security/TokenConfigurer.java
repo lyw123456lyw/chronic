@@ -1,0 +1,16 @@
+package com.hzsf.chronicanalysis.config.security;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.DefaultSecurityFilterChain;
+
+@RequiredArgsConstructor
+public class TokenConfigurer extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+    }
+}
