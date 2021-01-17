@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hzsf.chronicanalysis.user.entity.SysMenuVo;
 import com.hzsf.chronicanalysis.user.entity.SysResourceVo;
 import com.hzsf.chronicanalysis.user.entity.SysUserVo;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -17,6 +18,7 @@ import java.util.List;
  * @author 张杰
  * @since 2021-01-16
  */
+@Mapper
 public interface SysUserMapper extends BaseMapper<SysUserVo> {
 
     /**
@@ -46,7 +48,7 @@ public interface SysUserMapper extends BaseMapper<SysUserVo> {
             "</if>" +
             "</where>" +
             ")" +
-            "<script>")
+            "</script>")
     List<SysResourceVo> queryResourceListByUserId(@Param("userId") Integer userId);
 
     /**
@@ -67,13 +69,13 @@ public interface SysUserMapper extends BaseMapper<SysUserVo> {
             "     sys_menu menu\n" +
             "     INNER JOIN sys_menu_role mrole ON mrole.menu_id = menu.id \n" +
             "     WHERE\n" +
-            "     rrole.role_id IN ( SELECT urole.id FROM sys_user sysuser INNER JOIN sys_user_role urole ON urole.role_id = sysuser.id " +
+            "     mrole.role_id IN ( SELECT urole.id FROM sys_user sysuser INNER JOIN sys_user_role urole ON urole.role_id = sysuser.id " +
             "<where>" +
             "<if test = \"userId != null\">" +
             "sysuser.id = #{userId}\n" +
             "</if>" +
             "</where>" +
             ")" +
-            "<script>")
+            "</script>")
     List<SysMenuVo> queryMenuListByUserId(@Param("userId") Integer userId);
 }

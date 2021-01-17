@@ -8,11 +8,7 @@ import com.hzsf.chronicanalysis.user.dto.UserDto;
 import com.hzsf.chronicanalysis.user.vo.LoginVo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -38,10 +34,16 @@ public class SysUserController {
         return null;
     }
 
-    @PostMapping("login")
+    @GetMapping("login")
     @ApiOperation("登陆接口")
     public LoginVo login(@RequestBody UserDto userDto){
+        return null;
+    }
 
+    @GetMapping("test")
+    @ApiOperation("测试接口")
+    public String login(){
+        return "null";
     }
 
 }

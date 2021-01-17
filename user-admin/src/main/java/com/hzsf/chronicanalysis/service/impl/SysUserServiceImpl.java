@@ -38,17 +38,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserVo> im
 
     /**
      * 登陆
-     * @param userDto
+     * @param customUser
      * @return
      */
     @Override
-    public LoginVo login(UserDto userDto) {
-        SysUserVo user = this.getOne(new LambdaQueryWrapper<SysUserVo>().eq(SysUserVo::getUsername, userDto.getUsername()));
+    public LoginVo login(CustomUser customUser) {
+        SysUserVo user = this.getOne(new LambdaQueryWrapper<SysUserVo>().eq(SysUserVo::getUsername, customUser.getUsername()));
         if (null == user){
             throw new RuntimeException("不存在该用户");
         }else{
             //验证密码
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDto.getUsername(), userDto.getPassword());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(customUser.getUsername(), customUser.getPassword());
 //            SecurityContextHolder.getContext().setAuthentication(sampleAuthenticationManager.authenticate(authenticationToken));
             //查出用户拥有那些资源角色
             List<SysResourceVo> sysResourceVos = this.getBaseMapper().queryResourceListByUserId(user.getId());
@@ -57,19 +57,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserVo> im
             }
             List<SysMenuVo> sysMenuVoList = this.getBaseMapper().queryMenuListByUserId(user.getId());
             if (sysMenuVoList.isEmpty()){
-                throw new RuntimeException("请联系管理员分配菜单");
+//                throw new RuntimeException("请联系管理员分配菜单");
             }else{
                 //在这里需要将菜单树转换为json树
                 user.setMenuList(sysMenuVoList);
             }
             //将User信息转换为MD5存放在redis中,返回前端token
-            String userInfo = JSONObject.toJSONString(user);
-            String paramMd5 = ReqDedupHelperUtil.dedupParamMD5(userInfo);
-            String redisUserKey = ReqDedupHelperUtil.dedupParamMD5(String.valueOf(user.getId()));
-            redisTemplate.opsForValue().set(redisUserKey,paramMd5);
+//            String userInfo = JSONObject.toJSONString(user);
+//            String paramMd5 = ReqDedupHelperUtil.dedupParamMD5(userInfo);
+//            String redisUserKey = ReqDedupHelperUtil.dedupParamMD5(String.valueOf(user.getId()));
+//            redisTemplate.opsForValue().set(redisUserKey,paramMd5);
             LoginVo loginVo = new LoginVo();
             loginVo.setSysUser(user);
-            loginVo.setToken(redisUserKey);
+//            loginVo.setToken(redisUserKey);
             return loginVo;
         }
     }

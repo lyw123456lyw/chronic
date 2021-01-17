@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: wcfy-hospital-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/chronic_analysis_controller?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+    username: root
+    password: 123456
+

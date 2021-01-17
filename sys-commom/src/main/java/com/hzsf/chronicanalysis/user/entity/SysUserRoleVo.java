@@ -1,5 +1,6 @@
 package com.hzsf.chronicanalysis.user.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -25,13 +26,15 @@ public class SysUserRoleVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
     @ApiModelProperty(value = "用户Id")
     private Long adminId;
 
     @ApiModelProperty(value = "角色id")
     private Long roleId;
 
-    @TableId
+    @TableId( type = IdType.AUTO)
+    @ApiModelProperty(value = "用户id")
     private Integer id;
 
 

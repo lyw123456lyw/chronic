@@ -2,6 +2,7 @@ package com.hzsf.chronicanalysis.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hzsf.chronicanalysis.user.dto.UserDto;
+import com.hzsf.chronicanalysis.user.entity.CustomUser;
 import com.hzsf.chronicanalysis.user.entity.SysUserVo;
 import com.hzsf.chronicanalysis.user.vo.LoginVo;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
  */
 public interface ISysUserService extends IService<SysUserVo> {
     /**
-     * 登录接口
-     * @param userDto
+     * 登录接口需要返回的东西
      * @return
      */
-    LoginVo login(@RequestBody UserDto userDto);
+    LoginVo login(CustomUser customUser);
 
     /**
      * 用户的增删改

@@ -1,5 +1,7 @@
 package com.hzsf.chronicanalysis.user.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -39,6 +41,10 @@ public class SysResourceVo implements Serializable {
 
     @ApiModelProperty(value = "描述")
     private String description;
+
+    @TableId( type = IdType.AUTO)
+    @ApiModelProperty(value = "用户id")
+    private Integer id;
 
 
 }

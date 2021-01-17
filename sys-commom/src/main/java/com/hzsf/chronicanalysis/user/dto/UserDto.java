@@ -2,6 +2,7 @@ package com.hzsf.chronicanalysis.user.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @Data
@@ -30,4 +31,10 @@ public class UserDto {
 
     @ApiModelProperty(value = "操作类型 1 新增;编辑 2 删除")
     private Integer operType;
+
+    public static void main(String[] args) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encode = bCryptPasswordEncoder.encode("123456");
+        System.out.println(encode);
+    }
 }

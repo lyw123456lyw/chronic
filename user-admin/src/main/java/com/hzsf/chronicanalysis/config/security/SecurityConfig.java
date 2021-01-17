@@ -1,8 +1,13 @@
 package com.hzsf.chronicanalysis.config.security;
 
 import com.fasterxml.jackson.core.filter.TokenFilter;
-import com.hzsf.chronicanalysis.config.security.exception.SecurityAccessDeniedHandler;
-import com.hzsf.chronicanalysis.config.security.exception.SecurityAuthenticationEntryPoint;
+//import com.hzsf.chronicanalysis.config.security.exception.SecurityAccessDeniedHandler;
+//import com.hzsf.chronicanalysis.config.security.exception.SecurityAuthenticationEntryPoint;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hzsf.chronicanalysis.ResponseResult;
+import com.hzsf.chronicanalysis.ResponseStatusCode;
+import com.hzsf.chronicanalysis.config.security.way.JsonFormateLoginFilter;
+import com.hzsf.chronicanalysis.service.CustomUserDetailServiceImpl;
 import com.hzsf.chronicanalysis.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +19,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 
 @Configuration
@@ -26,29 +37,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      *客户端service
      */
     @Autowired
-    private ISysUserService sysUserService;
+    private CustomUserDetailServiceImpl customUserDetailService;
     /**
      *设置密码解码器
      */
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    /**
-     *未登录处理器
-     */
-    @Autowired
-    private SecurityAuthenticationEntryPoint authenticationEntryPoint;
-    /**
-     *授权失败处理器
-     */
-    @Autowired
-    private SecurityAccessDeniedHandler accessDeniedHandler;
-    /**
-     *每次登陆的时候校验token
-     */
-    @Autowired
-    private TokenFilter tokenFilter;
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+//    /**
+//     *未登录处理器
+//     */
+//    @Autowired
+//    private SecurityAuthenticationEntryPoint authenticationEntryPoint;
+//    /**
+//     *授权失败处理器
+//     */
+//    @Autowired
+//    private SecurityAccessDeniedHandler accessDeniedHandler;
+//    /**
+//     *每次登陆的时候校验token
+//     */
+//    @Autowired
+//    private TokenFilter tokenFilter;
 
-
+    @Autowired
+    private LoginSuccessHandler loginSuccessHandler;
+    @Autowired
+    private LoginFailureHandler loginFailureHandler;
 
 
     @Override
@@ -59,7 +75,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         //允许oauth2端点和登陆,登出端口的访问
-        http.authorizeRequests().antMatchers("/v1.0/pb/auth/**").permitAll();
         http.authorizeRequests().antMatchers("/v1.0/pb/alipay/**").permitAll();
         http.authorizeRequests().antMatchers("/oauth/**").permitAll();
         http.authorizeRequests()
@@ -72,14 +87,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/api-docs").permitAll()
                 .anyRequest().authenticated();
         //访问受限资源异常处理
-        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+        http.exceptionHandling().accessDeniedHandler((request, response, ex) -> {
+            customResponse(response, ResponseStatusCode.NO_AUTHORITY, ex);
+        });
         //未登访问异常处理
-        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+//        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
         // 解决不允许显示在iframe的问题
         http.headers().frameOptions().disable();
-        http.addFilterBefore(tokenFilter,UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(jsonFormateLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(tokenFilter,UsernamePasswordAuthenticationFilter.class);
         http.headers().cacheControl();
     }
+
+    @Bean
+    public JsonFormateLoginFilter jsonFormateLoginFilter() throws Exception {
+        JsonFormateLoginFilter jsonFormateLoginFilter = new JsonFormateLoginFilter();
+        jsonFormateLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        jsonFormateLoginFilter.setAuthenticationFailureHandler(loginFailureHandler);
+        jsonFormateLoginFilter.setFilterProcessesUrl("/login");
+        jsonFormateLoginFilter.setAuthenticationManager(authenticationManagerBean());
+        return jsonFormateLoginFilter;
+    }
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private void customResponse(HttpServletResponse response, ResponseStatusCode rsc, Object e) throws IOException {
+        response.setContentType("application/json;charset=utf-8");
+        response.setStatus(rsc.getCode());
+        PrintWriter out = response.getWriter();
+        out.write(objectMapper.writeValueAsString(new ResponseResult<>(rsc, e)));
+        out.flush();
+        out.close();
+    }
+
 
 
 
@@ -91,20 +132,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(customUserDetailService).passwordEncoder(passwordEncoder());
     }
 
-    @Autowired
-    private SampleAuthenticationManager sampleAuthenticationManager;
-
-    /**
-     * 把AuthenticationManager暴露为bean
-     * @return
-     * @throws Exception
-     */
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return sampleAuthenticationManager;
-    }
+//    @Autowired
+//    private SampleAuthenticationManager sampleAuthenticationManager;
+//
+//    /**
+//     * 把AuthenticationManager暴露为bean
+//     * @return
+//     * @throws Exception
+//     */
+//    @Bean
+//    @Override
+//    public AuthenticationManager authenticationManagerBean() throws Exception {
+//        return sampleAuthenticationManager;
+//    }
 }

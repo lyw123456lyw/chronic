@@ -2,6 +2,7 @@ package com.hzsf.chronicanalysis.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hzsf.chronicanalysis.user.entity.SysRoleVo;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.hzsf.chronicanalysis.user.entity.SysRoleVo;
  * @author 张杰
  * @since 2021-01-16
  */
+@Mapper
 public interface SysRoleMapper extends BaseMapper<SysRoleVo> {
 
 }
