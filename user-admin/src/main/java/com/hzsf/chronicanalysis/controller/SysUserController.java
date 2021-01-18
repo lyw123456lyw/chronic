@@ -36,13 +36,15 @@ public class SysUserController {
 
     @GetMapping("login")
     @ApiOperation("登陆接口")
-    public LoginVo login(@RequestBody UserDto userDto){
-        return null;
+    public String login(@RequestBody UserDto userDto){
+        System.out.println("123");
+        return "null";
     }
 
     @GetMapping("test")
     @ApiOperation("测试接口")
     public String login(){
+        System.out.println("夫士大夫士大夫");
         return "null";
     }
 

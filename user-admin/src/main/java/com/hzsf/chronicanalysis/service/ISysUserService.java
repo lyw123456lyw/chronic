@@ -7,6 +7,8 @@ import com.hzsf.chronicanalysis.user.entity.SysUserVo;
 import com.hzsf.chronicanalysis.user.vo.LoginVo;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 /**
  * <p>
  * 慢性病防控用户表 服务类
@@ -35,4 +37,6 @@ public interface ISysUserService extends IService<SysUserVo> {
      * @return
      */
     SysUserVo getUserInfo(Integer id);
+
+    List<String> getResouceUrlList(String userName);
 }

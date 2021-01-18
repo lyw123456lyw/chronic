@@ -89,4 +89,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserVo> im
     public SysUserVo getUserInfo(Integer id) {
         return null;
     }
+
+    @Override
+    public List<String> getResouceUrlList(String userName) {
+        SysUserVo user = this.getOne(new LambdaQueryWrapper<SysUserVo>().eq(SysUserVo::getUsername, userName));
+        List<SysResourceVo> sysResourceVos = this.getBaseMapper().queryResourceListByUserId(user.getId());
+        if (sysResourceVos.isEmpty()){
+            return null;
+        }else{
+            return sysResourceVos.parallelStream().map(a->a.getUrl()).collect(Collectors.toList());
+        }
+    }
 }

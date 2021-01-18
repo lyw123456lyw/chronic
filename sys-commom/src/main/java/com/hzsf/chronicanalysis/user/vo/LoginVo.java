@@ -12,4 +12,7 @@ public class LoginVo {
 
     @ApiModelProperty("token")
     private String token;
+
+    @ApiModelProperty("过期时间")
+    private Long expire;
 }

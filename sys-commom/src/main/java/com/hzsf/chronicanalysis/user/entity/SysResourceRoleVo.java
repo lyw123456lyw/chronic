@@ -27,10 +27,10 @@ public class SysResourceRoleVo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "角色ID")
-    private Long roleId;
+    private Integer roleId;
 
     @ApiModelProperty(value = "资源ID")
-    private Long resourceId;
+    private Integer resourceId;
 
     @TableId( type = IdType.AUTO)
     @ApiModelProperty(value = "用户id")

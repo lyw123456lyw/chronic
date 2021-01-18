@@ -2,8 +2,20 @@ spring:
   application:
     name: wcfy-hospital-service
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/chronic_analysis_controller?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
     username: root
-    password: 123456
+    password: admin123
+log4j:
+  logger:
+    mybatis: DEBUG
+
+config:
+  jwt:
+    # 加密密钥
+    secret: abcdefg1234567
+    # token有效时长
+    expire: 3600
+    # header 名称
+    header: token
 
