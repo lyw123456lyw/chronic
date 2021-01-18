@@ -4,6 +4,7 @@ package com.hzsf.chronicanalysis.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hzsf.chronicanalysis.ResponseResult;
 import com.hzsf.chronicanalysis.ResponseStatusCode;
+import com.hzsf.chronicanalysis.response.R;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +38,7 @@ public class RequestUtils {
         response.setStatus(rsc.getCode());
         PrintWriter out = response.getWriter();
         ObjectMapper objectMapper = new ObjectMapper();
-        out.write(objectMapper.writeValueAsString(new ResponseResult<>(rsc, e)));
+        out.write(objectMapper.writeValueAsString(e));
         out.flush();
         out.close();
     }

@@ -1,4 +1,4 @@
-package com.hzsf.chronicanalysis.config.security;
+package com.hzsf.chronicanalysis.config.security.filter;
 
 import com.hzsf.chronicanalysis.service.ISysResourceService;
 import com.hzsf.chronicanalysis.service.ISysRoleService;
@@ -33,6 +33,7 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
 
     @Autowired
     private ISysRoleService sysRoleService;
+    private String role_login;
 
 
     @Override
@@ -41,6 +42,9 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
         // 获取请求地址
         String requestUrl = ((FilterInvocation) o).getRequestUrl();
         log.info("requestUrl >> {}", requestUrl);
+        if (requestUrl.equals("index.html")){
+            return SecurityConfig.createList("ROLE_ANONYMOUS");
+        }
         //获取全部受限资源的URL
         List<SysResourceVo> resourceList = resourceService.list();
         if (!resourceList.isEmpty()){
@@ -58,6 +62,9 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
             if (ObjectUtils.isEmpty(set)) {
                 return SecurityConfig.createList("ROLE_LOGIN");
             }
+        }
+        if (set.size() == 0){
+            return SecurityConfig.createList("ROLE_LOGIN");
         }
         return set;
     }

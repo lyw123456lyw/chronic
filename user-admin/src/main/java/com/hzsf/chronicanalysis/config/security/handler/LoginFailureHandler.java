@@ -1,4 +1,4 @@
-package com.hzsf.chronicanalysis.config.security;
+package com.hzsf.chronicanalysis.config.security.handler;
 
 import com.hzsf.chronicanalysis.ResponseStatusCode;
 import com.hzsf.chronicanalysis.utils.RequestUtils;

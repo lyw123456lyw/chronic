@@ -30,8 +30,12 @@ public class CustomUser implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roleList.parallelStream()
-                .map(p -> new SimpleGrantedAuthority(String.valueOf(p.getRoleId()))).collect(Collectors.toSet());
+        if (roleList == null){
+            return null;
+        }else{
+            return roleList.parallelStream()
+                    .map(p -> new SimpleGrantedAuthority(String.valueOf(p.getRoleId()))).collect(Collectors.toSet());
+        }
     }
 
     public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {

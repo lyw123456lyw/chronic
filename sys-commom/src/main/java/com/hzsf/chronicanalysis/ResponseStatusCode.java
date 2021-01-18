@@ -9,7 +9,8 @@ public enum ResponseStatusCode {
     ERROR(500,"服务器异常"),
     URL_ERROR(404,"路径有误"),
     LOGIN_FAILED(10000,"登录失败"),
-    NO_AUTHORITY(10010,"无权限");
+    NO_AUTHORITY(403,"无权限"),
+    NO_LOGIN(401,"请登录");
     /**
      * 响应状态码
      */

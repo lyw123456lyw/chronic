@@ -79,7 +79,7 @@
 	<script type="text/javascript">
 	showDictSelect("sex", "sex");
 	initData();
-	
+
 	function initData(){
 		$.ajax({
 			type : 'get',
@@ -97,9 +97,9 @@
 			}
 		});
 	}
-	
+
 		$('#form').bootstrapValidator();
-		
+
 		layui.use(['layer','laydate'], function(){
             var layer = layui.layer;
             var laydate = layui.laydate;
@@ -107,20 +107,20 @@
               elem: '#birthday'
             });
         });
-		
+
 		function update() {
 			var bootstrapValidator = $("#form").data('bootstrapValidator');
 			bootstrapValidator.validate();
 		    if(!bootstrapValidator.isValid()){
 			   return;
 		    }
-		    
+
 		    var formdata = $("#form").serializeObject();
 
 			$.ajax({
 				type : 'put',
 				url : '/users',
-				contentType: "application/json; charset=utf-8",  
+				contentType: "application/json; charset=utf-8",
 				data : JSON.stringify(formdata),
 				success : function(data) {
 					layer.msg("修改成功", {shift: -1, time: 1000}, function(){
@@ -129,7 +129,7 @@
 				}
 			});
 		}
-		
+
 	</script>
 </body>
 </html>

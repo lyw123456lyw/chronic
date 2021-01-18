@@ -1,6 +1,7 @@
-package com.hzsf.chronicanalysis.config.security;
+package com.hzsf.chronicanalysis.config.security.filter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 @Slf4j
+@Primary
 @Component
 public class CustomAccessDecisionManager implements AccessDecisionManager {
     @Override
@@ -25,13 +27,13 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
         for (ConfigAttribute configAttribute : collection) {
             // 当前请求需要的权限
             String needRole = configAttribute.getAttribute();
-//            if ("ROLE_LOGIN".equals(needRole)) {
-//                if (authentication instanceof AnonymousAuthenticationToken) {
-//                    throw new BadCredentialsException("Not logged in!!");
-//                } else {
-//                    return;
-//                }
-//            }
+            if ("ROLE_LOGIN".equals(needRole)) {
+                if (authentication instanceof AnonymousAuthenticationToken) {
+                    throw new BadCredentialsException("Not logged in!!");
+                } else {
+                    return;
+                }
+            }
             // 当前用户所具有的权限
             for (GrantedAuthority grantedAuthority : authorities) {
                 // 包含其中一个角色即可访问

@@ -18,11 +18,11 @@ public class SR<T> extends R{
         super();
     }
 
-    public static <T>  R<T> success(T... data){
+    public static <T>  SR<T> success(T data){
         if (null == data){
-            return new R(ResponseStatus.SUCCESS.getStatus(),ResponseStatus.SUCCESS.getMsg());
+            return new SR(ResponseStatus.SUCCESS.getStatus(),ResponseStatus.SUCCESS.getMsg());
         }else{
-            return new R(ResponseStatus.SUCCESS.getStatus(),ResponseStatus.SUCCESS.getMsg(),data);
+            return new SR(ResponseStatus.SUCCESS.getStatus(),ResponseStatus.SUCCESS.getMsg(),data);
         }
     }
 

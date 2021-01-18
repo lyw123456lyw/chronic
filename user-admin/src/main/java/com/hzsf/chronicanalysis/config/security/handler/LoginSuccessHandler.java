@@ -1,8 +1,9 @@
-package com.hzsf.chronicanalysis.config.security;
+package com.hzsf.chronicanalysis.config.security.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzsf.chronicanalysis.ResponseStatusCode;
 import com.hzsf.chronicanalysis.config.security.jwt.JwtConfig;
+import com.hzsf.chronicanalysis.response.SR;
 import com.hzsf.chronicanalysis.service.ISysUserService;
 import com.hzsf.chronicanalysis.service.ITokenService;
 import com.hzsf.chronicanalysis.service.impl.JWTokenServiceImpl;
@@ -39,6 +40,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         LoginVo login = sysUserService.login(customUser);
         login.setToken(customUser.getToken());
         login.setExpire(customUser.getExpire());
-        RequestUtils.customResponse(response, ResponseStatusCode.SUCCESS,login);
+        SR<LoginVo> success = SR.success(login);
+        RequestUtils.customResponse(response, ResponseStatusCode.SUCCESS, success);
     }
 }
