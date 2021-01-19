@@ -33,18 +33,14 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
 
     @Autowired
     private ISysRoleService sysRoleService;
-    private String role_login;
 
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         Set<ConfigAttribute> set = new HashSet<>();
         // 获取请求地址
-        String requestUrl = ((FilterInvocation) o).getRequestUrl();
+        String requestUrl = ((FilterInvocation) o).getRequest().getRequestURI();
         log.info("requestUrl >> {}", requestUrl);
-        if (requestUrl.equals("index.html")){
-            return SecurityConfig.createList("ROLE_ANONYMOUS");
-        }
         //获取全部受限资源的URL
         List<SysResourceVo> resourceList = resourceService.list();
         if (!resourceList.isEmpty()){
@@ -59,12 +55,11 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
                     });
                 }
             }
-            if (ObjectUtils.isEmpty(set)) {
-                return SecurityConfig.createList("ROLE_LOGIN");
-            }
         }
-        if (set.size() == 0){
-            return SecurityConfig.createList("ROLE_LOGIN");
+        //防止数据库中没有数据，不能进行权限拦截
+        if(set.size()<1){
+            ConfigAttribute configAttribute = new SecurityConfig("ROLE_NO_USER");
+            set.add(configAttribute);
         }
         return set;
     }

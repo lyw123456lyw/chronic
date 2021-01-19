@@ -72,8 +72,6 @@
 				data : $("#login-form").serialize(),
 				success : function(data) {
 					localStorage.setItem("token", data.data.token);
-					console.log(data.data.token);
-					console.log(data.code);
 					location.href = '/index.html';
 				},
 				error : function(xhr, textStatus, errorThrown) {

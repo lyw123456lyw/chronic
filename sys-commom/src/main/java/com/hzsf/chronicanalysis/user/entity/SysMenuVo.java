@@ -1,6 +1,7 @@
 package com.hzsf.chronicanalysis.user.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -32,7 +34,7 @@ public class SysMenuVo implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "父级ID")
-    private Long parentId;
+    private Integer parentId;
 
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
@@ -54,6 +56,11 @@ public class SysMenuVo implements Serializable {
 
     @ApiModelProperty(value = "前端隐藏")
     private Integer hidden;
+
+    private String href;
+
+    @TableField(exist = false)
+    private List<SysMenuVo> children;
 
 
 }

@@ -19,4 +19,10 @@ public interface ISysRoleService extends IService<SysRoleVo> {
      * @return
      */
     List<Integer> getResourceOwendRole(String url);
+
+    /**
+     * 获取角色列表
+     * @return
+     */
+    List<SysRoleVo> getRoleList();
 }

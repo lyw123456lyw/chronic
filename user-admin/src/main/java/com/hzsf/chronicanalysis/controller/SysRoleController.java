@@ -1,9 +1,16 @@
 package com.hzsf.chronicanalysis.controller;
 
 
+import com.hzsf.chronicanalysis.service.ISysRoleService;
+import com.hzsf.chronicanalysis.user.entity.SysRoleVo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,5 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/sys-role-vo")
 public class SysRoleController {
+    @Autowired
+    private ISysRoleService roleService;
+
+
+    @PostMapping("/getRoleList")
+    public List<SysRoleVo> getRoleList(){
+        return roleService.getRoleList();
+    }
 
 }

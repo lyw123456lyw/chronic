@@ -2,14 +2,13 @@ package com.hzsf.chronicanalysis.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hzsf.chronicanalysis.mapper.SysRoleMapper;
-import com.hzsf.chronicanalysis.service.ISysResourceRoleService;
-import com.hzsf.chronicanalysis.service.ISysResourceService;
-import com.hzsf.chronicanalysis.service.ISysRoleService;
+import com.hzsf.chronicanalysis.response.exception.BusinessException;
+import com.hzsf.chronicanalysis.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hzsf.chronicanalysis.user.entity.SysResourceRoleVo;
-import com.hzsf.chronicanalysis.user.entity.SysResourceVo;
-import com.hzsf.chronicanalysis.user.entity.SysRoleVo;
+import com.hzsf.chronicanalysis.user.entity.*;
+import org.apache.catalina.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +30,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleVo> im
     @Autowired
     private ISysResourceRoleService resourceRoleService;
 
+    @Autowired
+    private ISysUserService sysUserService;
+
+    @Autowired
+    private ISysUserRoleService sysUserRoleService;
+
     @Override
     public List<Integer> getResourceOwendRole(String url) {
         SysResourceVo resource = resourceService.getOne(new LambdaQueryWrapper<SysResourceVo>().eq(SysResourceVo::getUrl, url));
@@ -41,8 +46,20 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleVo> im
             if (list.isEmpty()){
                 return null;
             }else{
-                List<Integer> collect = list.parallelStream().map(a -> a.getResourceId()).collect(Collectors.toList());
+                List<Integer> collect = list.parallelStream().map(a -> a.getRoleId()).collect(Collectors.toList());
                 return collect;
             }
         } }
+
+    @Override
+    public List<SysRoleVo> getRoleList() {
+        CustomUser customUser = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (null == customUser){
+            throw new RuntimeException("用户信息异常");
+        }else{
+            SysUserVo user = sysUserService.getOne(new LambdaQueryWrapper<SysUserVo>().eq(SysUserVo::getUsername, customUser.getUsername()));
+            return  this.getBaseMapper().getRoleList(user.getId());
+        }
+
+    }
 }
